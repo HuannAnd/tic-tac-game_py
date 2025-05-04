@@ -17,14 +17,9 @@ table = [
     ["7", "8", "9"],
 ]
 winner_plays = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],  # Vitorias em linhas
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],  # Vitorias em colunas
-    [0, 4, 8],
-    [2, 5, 6],  # Vitorias nas diagonais
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Vitorias em linhas
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Vitorias em colunas
+    [0, 4, 8], [2, 5, 6],  # Vitorias nas diagonais 
 ]
 round = 0
 choices = []
@@ -41,23 +36,15 @@ second_player_plays = []
 def draw_tic_tac_toe(table):
     print(f"{table[0]}\n{table[1]}\n{table[2]}")
 
-
-def game_is_finished():
-    if round == 9:
-        return True
-
-
 def is_game_tied():
     return round == 9
 
 
 def has_winner():
     round_player_choices = first_player_plays if round % 2 == 0 else second_player_plays
-    print(f"Player choices {round_player_choices}")
 
     for win_play in winner_plays:
         (a, b, c) = win_play
-        print(f"Current game in analysis {win_play}")
 
         if (
             a in round_player_choices
@@ -97,27 +84,23 @@ def get_user_response():
 
 print("O jogo começou!")
 while True:
-    # clear_terminal()
+    clear_terminal()
     draw_tic_tac_toe(table)
 
-    # escolhendo o jogador da vez
+    # escolhendo o jogador da vez, o simbolo e as escolhas do mesmo
     round_player = first_player_name if round % 2 == 0 else second_player_name
     round_symbol = "X" if round % 2 == 0 else "O"
     round_player_plays = first_player_plays if round % 2 == 0 else second_player_plays
 
     print(f"{round_player} ({round_symbol}): Digite uma das seguintes casas de 1 a 9")
-    # choice = int(input()) - 1 # Convertendo o input de 1 a 9 para 0 a 8 (ordem do array em python)
     choice = get_user_response()
 
     row = choice // 3
     column = choice % 3
 
-    # play = table[row][column]
-
     table[row][column] = round_symbol
     choices.append(choice)
     round_player_plays.append(choice)
-
 
     if round >= 4:
         print("Caiu no round >= 4")

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cronômetro com Marcação</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .time {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cronômetro</h1>
+  <div class="time" id="display">00:00.000</div>
+  <button onclick="startStop()">Iniciar / Parar</button>
+  <button onclick="downloadCSV()">Exportar CSV</button>
+  <ul id="marks"></ul>
+
+  <script>
+    let startTime = null;
+    let running = false;
+    let interval = null;
+    let marks = [];
+
+    function formatTime(ms) {
+      const minutes = String(Math.floor(ms / 60000)).padStart(2, '0');
+      const seconds = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
+      const milliseconds = String(ms % 1000).padStart(3, '0');
+      return `${minutes}:${seconds}.${milliseconds}`;
+    }
+
+    function updateDisplay() {
+      if (running) {
+        const now = Date.now();
+        const elapsed = now - startTime;
+        document.getElementById('display').textContent = formatTime(elapsed);
+      }
+    }
+
+    function startStop() {
+      if (!running) {
+        startTime = Date.now();
+        interval = setInterval(updateDisplay, 10);
+        running = true;
+      } else {
+        clearInterval(interval);
+        running = false;
+      }
+    }
+
+    function markTime() {
+      if (!running) return;
+      const now = Date.now();
+      const elapsed = now - startTime;
+      const formatted = formatTime(elapsed);
+      marks.push(formatted);
+      const li = document.createElement('li');
+      li.textContent = formatted;
+      document.getElementById('marks').appendChild(li);
+    }
+
+    function downloadCSV() {
+      let csv = "Marca\n";
+      marks.forEach(mark => {
+        csv += `${mark}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "tempos.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        markTime();
+      }
+    });
+  </script>
+</body>
+</html>
