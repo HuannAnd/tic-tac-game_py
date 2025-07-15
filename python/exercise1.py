@@ -1,3 +1,5 @@
+matrix_filename = input()
+
 def is_square_matrix(quantity):
   for num in range(1, quantity + 1):
     if num ** 2 == quantity:
@@ -64,7 +66,7 @@ def get_mode(vector):
     
     return [vector[where_mode], aux_vector[where_mode]]
 
-with open("matriz.txt", mode="r", encoding="utf-8") as current:
+with open(matrix_filename, mode="r", encoding="utf-8") as current:
   number_of_elements = 0
   document = current.readlines()
   matrix = []
